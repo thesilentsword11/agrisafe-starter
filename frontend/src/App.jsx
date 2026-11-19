@@ -1,9 +1,10 @@
+import LeafScreening from './LeafScreening'
 import { useEffect, useState } from 'react'
 import { api, saveSession, clearSession } from './api'
 import {
   Sprout, LayoutDashboard, FlaskConical, Database, ClipboardList, LogOut,
   Menu, X, ShieldCheck, Leaf, ArrowUpRight, Plus, Search, AlertTriangle,
-  CheckCircle2, Clock3, ChevronRight
+  CheckCircle2, Clock3, ChevronRight, ImagePlus
 } from 'lucide-react'
 
 const readUser = () => {
@@ -47,6 +48,7 @@ export default function App() {
   const nav = [
     { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
     { id: 'samples', label: 'Produce samples', icon: Leaf },
+    { id: 'leaf-screening', label: 'Leaf Image Screening', icon: ImagePlus },
     { id: 'assessment', label: 'Residue assessment', icon: FlaskConical },
     { id: 'mrls', label: 'Pesticide & MRL data', icon: Database },
     { id: 'history', label: 'Assessment history', icon: ClipboardList }
@@ -67,6 +69,7 @@ export default function App() {
         {notice && <div className="alert success"><CheckCircle2 size={17}/>{notice}<button onClick={() => setNotice('')}>Dismiss</button></div>}
         {page === 'dashboard' && <Dashboard user={user} samples={samples} mrls={mrls} assessments={assessments} loading={loading} onNavigate={setPage}/>}
         {page === 'samples' && <Samples samples={samples} refresh={loadData} notify={setNotice}/>}
+        {page === 'leaf-screening' && <LeafScreening />}
         {page === 'assessment' && <Assessment samples={samples} refresh={loadData} notify={setNotice}/>}
         {page === 'mrls' && <MRLs mrls={mrls} user={user} refresh={loadData} notify={setNotice}/>}
         {page === 'history' && <History assessments={assessments} samples={samples}/>}

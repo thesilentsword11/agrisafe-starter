@@ -1,134 +1,165 @@
 # AgriSafe
 
-A full-stack starter for pesticide-residue assessment and food-safety decision support.
+**AI-Based Leafy Vegetable Image Screening and Pesticide Residue Risk Assessment**
 
-## Stack
-- Frontend: React + Vite
-- Backend: FastAPI + SQLAlchemy
-- Database: SQLite (local development)
-- Authentication: JWT access tokens with admin/user roles
-- Reports: PDF endpoint scaffold (ReportLab)
+AgriSafe is a full-stack food-safety decision-support application combining image-based produce recognition with laboratory-based pesticide residue assessment.
 
-> Important: AgriSafe does not detect or quantify pesticide residues from photographs. Residue comparisons require laboratory measurements. MRL data in this starter is user-entered/demo data and must be verified against current official FSSAI requirements before real-world use.
+## Features
 
-## Prerequisites
-- Python 3.10+
-- Node.js 20+ and npm
-- Git
+- User registration and JWT authentication
+- Admin dashboard and role-based access
+- Produce sample management
+- Pesticide and Maximum Residue Limit (MRL) management
+- Laboratory residue assessment against configured MRL values
+- Assessment history
+- AI-powered fruit and vegetable image recognition
+- Image upload for produce screening
 
-## 1. Clone / create the GitHub repository
+## Technology Stack
 
-Create an empty repository on GitHub named `agrisafe-pesticide-residue-system`, then:
+**Frontend:** React, Vite, JavaScript, CSS
 
-```bash
-git clone https://github.com/YOUR-USERNAME/agrisafe-pesticide-residue-system.git
-cd agrisafe-pesticide-residue-system
+**Backend:** Python, FastAPI
+
+**Database:** SQLite
+
+**AI Model:** MobileNetV2 with TensorFlow.js
+
+**Authentication:** JWT
+
+## Important Scientific Limitation
+
+The image recognition model identifies produce from an image. It does not detect pesticide residues or determine whether food is chemically safe.
+
+Pesticide residue levels must be established through laboratory testing. AgriSafe compares laboratory-measured values with configured MRL records. If laboratory measurements are unavailable, residue safety cannot be determined from the photograph.
+
+Only verified and appropriately sourced MRL data should be used for real-world assessments. Demo values are not official regulatory limits.
+
+## Project Structure
+
+```text
+agrisafe-starter/
+├── backend/
+│   ├── app/
+│   │   ├── routers/
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── schemas.py
+│   │   └── ...
+│   ├── create_admin.py
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   ├── public/
+│   │   └── agrisafe-model/
+│   ├── src/
+│   ├── package.json
+│   └── .env.example
+└── README.md
 ```
 
-Copy the contents of this project into that repository if you downloaded the ZIP.
+## Requirements
 
-## 2. Start the backend
+- Python 3.10 or newer
+- Node.js and npm
+- Git
+
+## Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+cd agrisafe-starter
+```
+
+### 2. Configure the backend
 
 ```bash
 cd backend
 python -m venv .venv
-```
-
-Windows PowerShell:
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-macOS/Linux:
-```bash
 source .venv/bin/activate
-```
-
-Install and configure:
-```bash
 pip install -r requirements.txt
-```
-
-Copy `.env.example` to `.env` and replace `SECRET_KEY` with a long random secret.
-
-Windows:
-```powershell
-Copy-Item .env.example .env
-```
-
-macOS/Linux:
-```bash
 cp .env.example .env
 ```
 
-Run:
-```bash
-uvicorn app.main:app --reload
-```
+Edit `backend/.env` and set a unique, strong `SECRET_KEY`.
 
-Backend: http://127.0.0.1:8000  
-Interactive API docs: http://127.0.0.1:8000/docs
+### 3. Start the backend
 
-### Create the first admin
-
-In a second terminal, activate the same virtual environment and run:
+From the `backend` directory, with the virtual environment activated:
 
 ```bash
-python -m app.create_admin
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Follow the prompts. Admin creation is deliberately kept out of public registration.
+Backend API documentation:
 
-## 3. Start the frontend
+```text
+http://127.0.0.1:8000/docs
+```
 
-Open a second terminal:
+### 4. Create an administrator account
+
+Open another terminal:
+
+```bash
+cd backend
+source .venv/bin/activate
+python create_admin.py
+```
+
+Follow the prompts to create an administrator.
+
+### 5. Configure the frontend
+
+Open another terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev
+cp .env.example .env
 ```
 
-Open the URL printed by Vite, usually http://localhost:5173.
+Set `VITE_API_URL` in `frontend/.env` to your backend URL.
 
-The frontend expects the backend at `http://127.0.0.1:8000`. To change it, create `frontend/.env`:
+For a local setup:
 
 ```env
 VITE_API_URL=http://127.0.0.1:8000
 ```
 
-## 4. Push to GitHub
+### 6. Start the frontend
 
-From the project root:
+From the `frontend` directory:
 
 ```bash
-git init
-git add .
-git commit -m "Initial AgriSafe full-stack starter"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/agrisafe-pesticide-residue-system.git
-git push -u origin main
+npm run dev -- --host 0.0.0.0
 ```
 
-If you cloned the empty repository in step 1, skip `git init`, `git branch`, and `git remote add`; just commit and push.
+Open the frontend URL shown in the terminal.
 
-## Included features
+## GitHub Codespaces Setup
 
-- User registration and login
-- JWT authentication
-- Admin and user roles
-- Admin-only pesticide/MRL record creation
-- Sample creation and listing
-- Laboratory residue assessment
-- Explicit `NO_MRL_FOUND` outcome when no matching limit exists
-- Assessment history
-- Health-check endpoint
+When running the project in GitHub Codespaces:
 
-## Important next steps before deployment
+1. Start the backend on port `8000`.
+2. Start the frontend on port `5173`.
+3. Set `VITE_API_URL` in `frontend/.env` to your own Codespaces forwarded backend URL.
+4. Set `FRONTEND_ORIGINS` in `backend/.env` to your own forwarded frontend URL.
+5. Ensure the forwarded port visibility permits the frontend to access the backend.
+6. Restart the servers after changing environment variables.
 
-1. Replace the development secret key and configure environment-specific CORS.
-2. Use HTTPS and a production database.
-3. Add refresh-token/session revocation and rate limiting.
-4. Validate all MRL records against the latest official FSSAI schedules, including commodity definitions, units, effective dates and footnotes.
-5. Add audit logs and protect uploaded files before accepting real user data.
-6. Have the regulatory interpretation reviewed by a qualified food-safety professional.
+Each collaborator must configure their own environment variables and start their own backend and frontend servers. Local `.env` files and SQLite databases are not shared automatically.
+
+## AI Model Information
+
+The fruit and vegetable recognition model is based on MobileNetV2 and supports 36 produce categories.
+
+Model source: https://huggingface.co/spaces/tml-engineering/fruit-vegetable-recognition
+
+The prediction confidence represents the model's confidence in its selected class. It is not a measure of food safety.
+
+## Disclaimer
+
+AgriSafe is an academic project and a decision-support demonstration. It is not a substitute for accredited laboratory testing or official food-safety certification.
