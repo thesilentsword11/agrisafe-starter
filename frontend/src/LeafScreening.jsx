@@ -38,7 +38,7 @@ export default function LeafScreening() {
         }
 
         await tf.ready()
-        loadedModel = await tf.loadLayersModel('/agrisafe-model/model.json')
+        loadedModel = await tf.loadLayersModel(`${import.meta.env.BASE_URL}agrisafe-model/model.json`)
 
         const warmup = tf.zeros([1, 224, 224, 3])
         const output = loadedModel.predict(warmup)
