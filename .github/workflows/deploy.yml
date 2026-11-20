@@ -35,7 +35,7 @@ jobs:
       - name: Build application
         working-directory: frontend
         env:
-          VITE_API_URL: https://glowing-palm-tree-965gp5657r6r39xr6-8000.app.github.dev
+          VITE_API_URL: https://fictional-waddle-xrprj454w79gfr9j-8000.app.github.dev
         run: npm run build
 
       - name: Upload website
